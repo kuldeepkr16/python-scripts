@@ -10,7 +10,7 @@ LOGGER_QUEUE = Queue()
 
 
 def generate_numbers_list():
-    LOGGER_QUEUE.put('Number generation Started')
+    LOGGER_QUEUE.put("Number generation Started")
     for x in range(1, 21):
         NUMBERS_QUEUE.put(x)
         time.sleep(5)
@@ -18,13 +18,13 @@ def generate_numbers_list():
 
 
 def add_random():
-    LOGGER_QUEUE.put('Number addition Started')
+    LOGGER_QUEUE.put("Number addition Started")
     while True:
         num = randint(10, 20)
         if not NUMBERS_QUEUE.empty():
             x = NUMBERS_QUEUE.get()
             LOGGER_QUEUE.put(f"add_random - {x}")
-            if x == 'end':
+            if x == "end":
                 break
             RANDINT_QUEUE.put(x+num)
     RANDINT_QUEUE.put("end")
@@ -32,12 +32,12 @@ def add_random():
 
 
 def numbers_list(final_list):
-    LOGGER_QUEUE.put('list conversion Started')
+    LOGGER_QUEUE.put("list conversion Started")
     while True:
         if not RANDINT_QUEUE.empty():
             x = RANDINT_QUEUE.get()
             LOGGER_QUEUE.put(f"numbers_list - {x}")
-            if x == 'end':
+            if x == "end":
                 break
             LOGGER_QUEUE.put(x)
             LOGGER_QUEUE.put(f"appending - {x}")
@@ -54,14 +54,14 @@ def print_logs():
         if not LOGGER_QUEUE.empty():
             x = LOGGER_QUEUE.get()
             logging.info(x)
-            if x == 'end':
+            if x == "end":
                 break
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     logger_process = Process(target=print_logs)
     logger_process.start()
-    LOGGER_QUEUE.put('Script Started')
+    LOGGER_QUEUE.put("Script Started")
     shared_list = Manager().list()
 
     generate_numbers_process = Process(target=generate_numbers_list)
@@ -78,4 +78,4 @@ if __name__ == '__main__':
 
     final_set = convert_to_set(shared_list)
     LOGGER_QUEUE.put(final_set)
-    LOGGER_QUEUE.put('end')
+    LOGGER_QUEUE.put("end")
